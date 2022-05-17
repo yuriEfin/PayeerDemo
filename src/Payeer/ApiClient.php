@@ -2,57 +2,45 @@
 
 namespace Payeer;
 
+use GuzzleHttp\Psr7\Response;
 use Payeer\Exceptions\InvalidConfigurationClientException;
-use Exception;
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class ApiClient
 {
     private ?string $baseUrl = null;
+    private ?ClientInterface $httpClient = null;
     private array $options = [];
     
     /**
      * @throws InvalidConfigurationClientException
      */
-    public function __construct(array $config = [])
+    public function __construct(ClientInterface $httpClient, array $config = [])
     {
         $this->configure($config);
+        $this->httpClient = $httpClient;
     }
     
-    public function request(array $params = [])
+    /**
+     * @param       $httpMethod
+     * @param array $params - for curl options and forward URI endpoint api
+     *
+     * @return ResponseInterface | Response
+     * @throws GuzzleException
+     */
+    public function request($httpMethod = 'GET', array $params = []): ResponseInterface
     {
-        $options['post']['ts'] = round(microtime(true) * 1000);
+        $config = $params;
+        unset($params['endpoint']);
         
-        $post = json_encode($params['post']);
-        
-        $sign = hash_hmac('sha256', $options['method'] . $post, $this->options['key']);
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://payeer.com/api/trade/" . $params['method']);
-        
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'API-ID: ' . $this->options['id'],
-            'API-SIGN: ' . $sign,
-        ]);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        $responseData = json_decode($response, true);
-        
-        if ($responseData['success'] !== true) {
-            $this->errors = $responseData['error'] ?? null;
-            
-            throw new Exception($responseData['error']['code']  ?? null);
-        }
-        
-        return $responseData;
+        return $this->httpClient->request($httpMethod, $this->buildUri($params['uri']), $config);
+    }
+    
+    protected function buildUri($endpoint)
+    {
+        return rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint);
     }
     
     protected function configure(array $config = []): void

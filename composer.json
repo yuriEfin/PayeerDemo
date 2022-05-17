@@ -9,6 +9,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.4.28",
-    "ext-json": "*"
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "7.4.x-dev"
   }
 }

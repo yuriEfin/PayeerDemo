@@ -2,41 +2,45 @@
 
 namespace Payeer\Api;
 
+// @TODO: POST | GET | ... to constants
 class OrderClient extends AbstractClient
 {
     public function create($req = [])
     {
         $response = $this->client->request(
+            'POST',
             [
-                'method' => 'order_create',
+                'endpoint' => 'order_create',
                 'post'   => $req,
             ]
         );
         
-        return $this->buildResponse($response);
+        return $this->buildResponse(json_decode($response->getBody()->getContents(), true));
     }
     
     public function getStatus(array $options = [])
     {
         $response = $this->client->request(
+            'POST',
             [
-                'method' => 'order_status',
+                'endpoint' => 'order_status',
                 'post'   => $options,
             ]
         );
     
-        return $this->buildResponse($response);
+        return $this->buildResponse(json_decode($response->getBody()->getContents(), true));
     }
     
     public function getMyOrders(array $options = [])
     {
         $response = $this->client->request(
+            'POST',
             [
-                'method' => 'my_orders',
+                'endpoint' => 'orders',
                 'post'   => $options,
             ]
         );
     
-        return $this->buildResponse($response);
+        return $this->buildResponse(json_decode($response->getBody()->getContents(), true));
     }
 }

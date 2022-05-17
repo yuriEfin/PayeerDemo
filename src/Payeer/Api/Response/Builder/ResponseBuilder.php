@@ -3,8 +3,10 @@
 namespace Payeer\Api\Response\Builder;
 
 use Payeer\Api\Response\Builder\Exceptions\BuilderException;
+use Payeer\Api\Response\Builder\Interfaces\BuilderInterface;
+use Payeer\Api\Response\ResponseInterface;
 
-class ResponseBuilderFactory
+class ResponseBuilder implements BuilderInterface
 {
     private $builders = [
         'account'    => AccounBuilder::class,
@@ -13,7 +15,7 @@ class ResponseBuilderFactory
         // ...
     ];
     
-    public function create($data)
+    public function build(array $data = []): ResponseInterface
     {
         $builderClass = $this->builders[$data['key']] ?? null;
         if ($builderClass) {

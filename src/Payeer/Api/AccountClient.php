@@ -2,12 +2,14 @@
 
 namespace Payeer\Api;
 
+use Payeer\Api\Response\ResponseInterface;
+
 class AccountClient extends AbstractClient
 {
-    public function account(): ?array
+    public function account(): ?ResponseInterface
     {
-        $res = $this->client->request(['method' => 'account',]);
+        $response = $this->client->request('POST', ['endpoint' => 'account',]);
         
-        return $res['balances'] ?? null;
+        return $this->buildResponse($response);
     }
 }
