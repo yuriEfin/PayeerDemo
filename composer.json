@@ -1,0 +1,14 @@
+{
+  "name": "payeer_api/refactor-7.4",
+  "description": "Payeer api client",
+  "autoload": {
+    "psr-4": {
+      "Payeer\\": "/src/Payeer"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.4.28",
+    "ext-json": "*"
+  }
+}

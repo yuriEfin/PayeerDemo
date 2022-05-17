@@ -10,7 +10,6 @@ class Api_Trade_Payeer
         $this->arParams = $params;
     }
 
-
     private function Request($req = array())
     {
         $msec = round(microtime(true) * 1000);
