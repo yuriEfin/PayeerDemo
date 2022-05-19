@@ -8,8 +8,11 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.4.28",
+    "php": ">7.4.28",
     "ext-json": "*",
     "guzzlehttp/guzzle": "7.4.x-dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "8.5.26"
   }
 }

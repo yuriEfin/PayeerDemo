@@ -1,0 +1,9 @@
+<phpunit
+        bootstrap="./src/Tests/bootstrap.php"
+        colors="true">
+    <testsuites>
+        <testsuite name="Payeer">
+            <directory>./src/Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
